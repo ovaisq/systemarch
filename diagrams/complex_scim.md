@@ -39,10 +39,12 @@ flowchart TD
   LoadBalancer -->|Distributes Requests| SCIMServer2
   SCIMServer1 -->|Queries User Data| UserDirectory
   SCIMServer1 -->|Authenticates Users| IdentityProvider
-  SCIMServer1 -->|Accesses External Services| ExternalService1
+  SCIMServer1 -->|"Accesses External
+Services"| ExternalService1
   SCIMServer2 -->|Queries User Data| UserDirectory
   SCIMServer2 -->|Authenticates Users| IdentityProvider
-  SCIMServer2 -->|Accesses External Services| ExternalService2
+  SCIMServer2 -->|"Accesses External
+Services"| ExternalService2
   UserDirectory -->|User Data| Database
 
 ```
