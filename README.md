@@ -1,6 +1,14 @@
 # systemarch
 System Architectural Design Diagrams etc...
 
+* api_gwy.md: Simple API Gateway diagram
+
+* complex_scim.md: Somewhat complex SCIM server architecture diagram
+
+* scim_api_gwy.md: Basic SCIM server architecture diagram
+
+* pub_sub.md: Pub/Sub Diagram
+
 * 2017_2021_dev-vm-infra-designed-built-by-me.png
 	* I architected and deployed this VMware vSphere bases Dev/Test VM infrastructure from scratch
 	* This infra is used (still in production today) for development and testing of Gliffy Plugins 
