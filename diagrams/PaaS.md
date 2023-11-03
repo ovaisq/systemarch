@@ -1,4 +1,4 @@
-``` mermaid
+```mermaid
 graph TD;
     subgraph main[My Take on PaaS: Patient Care Management Platform]
     direction TB
