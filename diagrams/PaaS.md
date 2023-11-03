@@ -1,4 +1,5 @@
-flowchart TD
+``` mermaid
+graph TD;
     subgraph main[My Take on PaaS: Patient Care Management Platform]
     direction TB
  
@@ -54,3 +55,4 @@ flowchart TD
         DataLayer --> EMR
 
     end
+```
