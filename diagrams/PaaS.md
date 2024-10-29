@@ -6,9 +6,12 @@ Consider a scenario in which a small, rural, or urban hospital network serves an
 
 ```mermaid
 graph TD
-    subgraph main[My Take on PaaS: Patient Care Management Platform]
+    classDef subgraph_padding fill:none,stroke:none
+    subgraph main[My Take on PaaS:
+Patient Care Management
+Platform]
+    subgraph blank[ ]
     direction TB
- 
         subgraph Clinicians["Clinicians"]
             direction TB
             style EXISTINGPATDASHBOARD fill:#500
@@ -59,6 +62,8 @@ graph TD
         AI <-- Patient Health Data --> DataLayer
         DataLayer -- $$ --> Billing
         DataLayer --> EMR
-
+        EMR <--Data Feed--> EXISTINGPATDASHBOARD
     end
+    end
+class blank subgraph_padding
 ```
