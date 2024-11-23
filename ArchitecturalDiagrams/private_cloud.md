@@ -22,6 +22,7 @@ graph
     style ELASTIC fill:#ffaa,stroke:#13821a,stroke-width:4px
     style DOCKER fill:#bbffff,stroke:#13821a,stroke-width:4px
     style JENKINSNODE fill:#bbffff,stroke:#13821a,stroke-width:4px
+    style GITHUBRUNNER fill:#bbffff,stroke:#13821a,stroke-width:4px
     style APPS fill:#bbffdd,stroke:#13821a,stroke-width:4px
     style SUPERSET fill:#ffffff,stroke:#13821a,stroke-width:4px
     style ChatGPTUI fill:#ffffff,stroke:#13821a,stroke-width:4px
@@ -136,7 +137,9 @@ graph
                     HAPROXY
                     DOCKER
                     DATASTORE
-                    JENKINSNODE["Jenkins Nodes"]
+                    JENKINSNODE["`**Jenkins Nodes**`"]
+                    GITHUBRUNNER["`**Self Hosted
+                    GitHub Runner**`"]
                 end
             end
         end
