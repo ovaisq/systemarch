@@ -70,8 +70,8 @@ graph
             RedditScraper[Reddit Data
             Scraper
             Service]
-            MedBillingForecast[Medical Billing Forecasting
-            Service]
+            MedBillingForecast["Medical Billing Forecasting
+            Service"]
             VariousWorkflowAutomation[Workflow
             Automation
             Service]
