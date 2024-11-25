@@ -7,7 +7,7 @@ title: Agentic AI Platform as a Service/Agentic-AI-Platform-in-a-Box
 
 graph
     %% Styles
-    style GPU1 fill:#00f3f3,stroke:#13821a,stroke-width:4px
+    style GPU1 fill:#bbffff,stroke:#13821a,stroke-width:4px
     style ESXI fill:#00a0f3,stroke:#13821a,stroke-width:4px
     style CACHING fill:#bbffdd,stroke:#13821a,stroke-width:4px
     style KS1 fill:#aacc00,stroke:#13821a,stroke-width:4px
@@ -32,15 +32,16 @@ graph
     style VMS fill:#ccefdd,stroke:#13821a,stroke-width:4px
     style LLMAPPSK8 fill:#bbffdd,stroke:#13821a,stroke-width:4px
     style RedditScraper fill:#ffffff,stroke:#13821a,stroke-width:4px
+    style FE fill:#ffffff,stroke:#13821a,stroke-width:4px
     style MedBillingForecast fill:#ffffff,stroke:#13821a,stroke-width:4px
     style VariousWorkflowAutomation fill:#ffffff,stroke:#13821a,stroke-width:4px
     style HAPROXY fill:#bbffff,stroke:#13821a,stroke-width:4px
+    style DATASTORE fill:#bbffff,stroke:#13821a,stroke-width:4px
 
     classDef subgraph_padding fill:none,stroke:none
     
     %% NAS and External Backup
-    QNAP[(QNAP TS-873
-    NAS)]
+    QNAP[(NAS/iSCSI)]
     BACKUP[External Backup]
 
     %% Load Balancer
@@ -55,26 +56,26 @@ graph
 
     %% AI Cluster
     subgraph LLM["`**Agentic-AI Cluster**`"]
+        direction RL
         subgraph blank6[ ]
+        direction RL
+        subgraph blank9[ ]
             direction RL
             GPU1["`**OLLAMA1**
-            3 x RTX 4060ti @ 48GB VRAM total`"]
+            4 x RTX 3090 @ 24GB ea. @ 96GB VRAM total`"]
+        end
         end
     end
 
     %% Agentic AI Services
-    subgraph LLMAPPSK8["`**Agentic-AI Services**`"]
+    subgraph LLMAPPSK8["`**Agentic-AI Services/Apps**`"]
         direction RL
         subgraph blank2[ ]
             direction RL
-            RedditScraper[Reddit Data
-            Scraper
-            Service]
-            MedBillingForecast["Medical Billing Forecasting
-            Service"]
-            VariousWorkflowAutomation[Workflow
-            Automation
-            Service]
+            RedditScraper["AI content analyser Service"]
+            MedBillingForecast["Billing Forecasting Service"]
+            VariousWorkflowAutomation["Domain Specific Workflow Automation Service"]
+            FE["Front-end Apps"]
         end
     end
 
@@ -100,12 +101,14 @@ graph
         direction RL
         subgraph KS1["`**Kubesphere 4.1.2 - K8 Prod**`"]
             direction RL
-            subgraph blank[ ]
-                direction RL
-                APPS
-                LLMAPPSK8
-                CACHING
-            end
+                subgraph blank[ ]
+                subgraph blank10[ ]
+                    direction RL
+                    APPS
+                    LLMAPPSK8
+                    CACHING
+                end
+                end
             end
         end
         subgraph KS2["`**Kubesphere 4.1.2 - K8 Sandbox**`"
@@ -120,8 +123,13 @@ graph
 
     %% Kubernetes Storage
     subgraph K8STORAGE["`**Kubernetes Volumes**`"]
-        NFS[NFS Storageclass]
         direction RL
+        subgraph blank7 [ ]
+        subgraph blank8 [ ]
+            direction RL
+            NFS["NFS Storageclass"]
+        end
+        end
     end
 
     %% VMWare ESXi Host
@@ -169,5 +177,8 @@ class blank3 subgraph_padding
 class blank4 subgraph_padding
 class blank5 subgraph_padding
 class blank6 subgraph_padding
-
+class blank7 subgraph_padding
+class blank8 subgraph_padding
+class blank9 subgraph_padding
+class blank10 subgraph_padding
 ```
