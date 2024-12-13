@@ -25,22 +25,14 @@ flowchart TD
     style CAM3 fill:#e6fff2,stroke:#13821a,stroke-width:4px
     style CAM4 fill:#e6fff2,stroke:#13821a,stroke-width:4px
     style Z fill:#ffdb4d,stroke:#13821a,stroke-width:4px
-    style GPU1 fill:#b3b3ff,stroke:#13821a,stroke-width:4px
-    style GPU2 fill:#b3b3ff,stroke:#13821a,stroke-width:4px
     style HB fill:#b3b3ff,stroke:#13821a,stroke-width:4px
-    style K8_1 fill:#aaaaaa,stroke:#13821a,stroke-width:4px
-    style K8_2 fill:#aaaaaa,stroke:#13821a,stroke-width:4px
     style K8STORAGE fill:#aaaaaa,stroke:#13821a,stroke-width:4px
     style K8CONFIG fill:#aaaaaa,stroke:#13821a,stroke-width:4px
     style NFS fill:#ffb84d,stroke:#13821a,stroke-width:4px
     style PSQL fill:#ffaa,stroke:#13821a,stroke-width:4px
     style REDIS fill:#ffaa,stroke:#13821a,stroke-width:4px
     style ELASTIC fill:#ffaa,stroke:#13821a,stroke-width:4px
-    style DOCKER fill:#bbffff,stroke:#13821a,stroke-width:4px
-    style APPS fill:#bbffdd,stroke:#13821a,stroke-width:4px
-    style SUPERSET fill:#ffffff,stroke:#13821a,stroke-width:4px
-    style ChatGPTUI fill:#ffffff,stroke:#13821a,stroke-width:4px
-    style SONAR fill:#ffffff,stroke:#13821a,stroke-width:4px
+
 
     Z[WAN
     10GBE]
@@ -89,53 +81,26 @@ flowchart TD
     CAM3[CAM3]
     CAM4[CAM4]
 
-    DOCKER[DOCKER
-    Sidecar]
+
     BACKUP[External Backup]
     K8CONFIG[K8 
     YAML CONFIGS]
-    PSQL[(PostgreSQL)]
 
-    subgraph VMCLUSTER[ESXi Cluster]
-        direction TB
-        HA[VMware
-        ESXi 1]
-        HA2[VMware
-        ESXi 2]
+
+    subgraph VMCLUSTER["ESXi 8U3
+        AMD Epyc 7532
+        256GB RAM"]
     end
 
     subgraph DATASTORE[Datastore]
-
+        PSQL[(PostgreSQL)]
         REDIS[(Redis)]
         ELASTIC[(ElasticCache)]
     end
-    subgraph K8[Managed K8 Cluster]
-        subgraph KS3[Kubsphere 3.4.1]
-            K8_1((Prod
-    Kubernetes))
-        end
-        subgraph KS4[Kubsphere 4.1.2]
-            K8_2((Sandbox
-    Kubernetes))
-        end
-    end
+
 
     subgraph K8STORAGE[Kubernetes Datastore]
         NFS[NFS Storageclass]
-    end
-
-    subgraph LLM[AI Cluster]
-        GPU1[ESXi VM - OLLAMA1
-        2 x RTX 3060]
-        GPU2[ESXi VM - OLLAMA2
-        2 x RTX 4060ti]
-    end
-
-    subgraph APPS
-        direction LR
-        SUPERSET[Apache Superset]
-        ChatGPTUI[ChatGPT WebUI]
-        SONAR[SonarQube]
     end
 
     Z <==10GBE==> A
@@ -152,7 +117,7 @@ flowchart TD
 
     G <==1GBE==> B
     D <==2.5GBE==> F
-    E <==2.5GBE==> HA
+    E <==10 GBE==> VMCLUSTER
     E <==2.5GBE==> HB
     E <==1GBE==> HC
 
@@ -162,30 +127,19 @@ flowchart TD
     B <==1GBE POE==> H
     H <==POE==> CAM1
     H <==POE==> CAM2
-    HA -..-> GPU1
-    HA2 -..-> GPU2
-    D <==1GBE==> PS5
-    D <==2.5GBE==> HA2
-    FA <==2.5GBE POE+==> B
-    FA <==2.5GBE POE+==> B
-    FA <==2.5GBE POE+==> B
-    FA <==2.5GBE POE+==> B
 
-    HA <-.MAIN.-> PSQL
-    HA2 <-.REPLICA.-> PSQL
-    HA -..-> DOCKER
-    HA -..-> K8_1
-    HA2 -..-> K8_2
+
+    D <==1GBE==> PS5
+
+    FA <==2.5GBE POE+==> B
+    FA <==2.5GBE POE+==> B
+    FA <==2.5GBE POE+==> B
+    FA <==2.5GBE POE+==> B
     
-    K8_1 <-..-> K8STORAGE
-    K8_2 <-..-> K8STORAGE
 
     K8STORAGE <-.NFS.-> QNAP
     QNAP -.RSYNC.-> BACKUP
     K8CONFIG -.CRON.-> QNAP
-    K8 <-..-> DATASTORE
-    K8 <-..-> APPS
-    PSQL -.PGDUMP.-> QNAP
     DATASTORE -.BACKUP.-> QNAP
 ```
 
