@@ -5,7 +5,7 @@ title: Agentic AI Platform as a Service/Agentic-AI-Platform-in-a-Box
 
 %%{init: {'theme': 'forest', "loglevel":1,'themeVariables': {'lineColor': 'Blue', 'fontSize':'28px',"fontFamily": "Trebuchet MS"}}}%%
 
-graph
+graph LR
     %% Styles
     style GPU1 fill:#bbffff,stroke:#13821a,stroke-width:4px
     style ESXI fill:#00a0f3,stroke:#13821a,stroke-width:4px
@@ -56,22 +56,24 @@ graph
 
     %% AI Cluster
     subgraph LLM["`**Agentic-AI Cluster**`"]
-        direction RL
+        direction LR
         subgraph blank6[ ]
-        direction RL
+        direction LR
         subgraph blank9[ ]
-            direction RL
+            direction LR
             GPU1["`**OLLAMA1**
-            4 x RTX 3090 @ 24GB ea. @ 96GB VRAM total`"]
+            2 x RTX 3060 @ 12GB VRAM ea. 
+            2 x RTX 4060ti @ 16GB VRAM ea.
+            Total 56GB VRAM`"]
         end
         end
     end
 
     %% Agentic AI Services
     subgraph LLMAPPSK8["`**Agentic-AI Services/Apps**`"]
-        direction RL
+        direction LR
         subgraph blank2[ ]
-            direction RL
+            direction LR
             RedditScraper["AI content analyser Service"]
             MedBillingForecast["Billing Forecasting Service"]
             VariousWorkflowAutomation["Domain Specific Workflow Automation Service"]
@@ -81,7 +83,7 @@ graph
 
     %% User Web Apps
     subgraph APPS["`**User Web Apps**`"]
-        direction RL
+        direction LR
         ChatGPTUI[ChatGPT WebUI]
         JENKINS[Jenkins]
         SONAR[SonarQube]
@@ -90,7 +92,7 @@ graph
 
     %% Caching Services
     subgraph CACHING["`**Caching**`"]
-        direction RL
+        direction LR
         REDIS[(Redis)]
         ELASTIC[(OpenSearch)]
     end
@@ -98,12 +100,12 @@ graph
     %% Kubernetes Cluster
     subgraph K8["`**Managed K8 Clusters**`"]
         subgraph blank4 [ ]
-        direction RL
+        direction LR
         subgraph KS1["`**Kubesphere 4.1.2 - K8 Prod**`"]
-            direction RL
+            direction LR
                 subgraph blank[ ]
                 subgraph blank10[ ]
-                    direction RL
+                    direction LR
                     APPS
                     LLMAPPSK8
                     CACHING
@@ -113,7 +115,7 @@ graph
         end
         subgraph KS2["`**Kubesphere 4.1.2 - K8 Sandbox**`"
         Mirror of K8 Prod]
-        direction RL
+        direction LR
         end
         K8CONFIG
         K8STORAGE
@@ -137,9 +139,9 @@ graph
         subgraph blank3[ ]
             direction RL
             subgraph VMS["`**VMs**`"]
-                direction RL
+                direction BT
                 subgraph blank5 [ ]
-                    direction RL
+                    direction BT
                     K8
                     LLM
                     HAPROXY
@@ -166,7 +168,9 @@ RedditScraper --> HAPROXY
 MedBillingForecast --> HAPROXY
 VariousWorkflowAutomation --> HAPROXY
 ChatGPTUI --> HAPROXY
-CLIENT ==REST==> LLMAPPSK8
+CLIENT ==REST
+SSL/TLS==> LLMAPPSK8
+CLIENT ==HTTPS==> APPS
 DATASTORE ==Backup==> QNAP
 K8CONFIG ==Backup==> QNAP
 K8STORAGE ==> QNAP ==RSYNC==> BACKUP
