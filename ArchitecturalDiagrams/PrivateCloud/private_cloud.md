@@ -24,6 +24,8 @@ graph LR
     style JENKINSNODE fill:#bbffff,stroke:#13821a,stroke-width:4px
     style GITHUBRUNNER fill:#bbffff,stroke:#13821a,stroke-width:4px
     style APPS fill:#bbffdd,stroke:#13821a,stroke-width:4px
+    style WebContentSummarizer fill:#ffffff,stroke:#13821a,stroke-width:4px
+    style DataCachingService fill:#ffffff,stroke:#13821a,stroke-width:4px
     style SUPERSET fill:#ffffff,stroke:#13821a,stroke-width:4px
     style ChatGPTUI fill:#ffffff,stroke:#13821a,stroke-width:4px
     style SONAR fill:#ffffff,stroke:#13821a,stroke-width:4px
@@ -55,16 +57,17 @@ graph LR
     OPENSEARCH[(OpenSearch)]
 
     %% AI Cluster
-    subgraph LLM["`**Agentic-AI Cluster**`"]
+    subgraph LLM["`**Agentic-AI LLM Cluster**`"]
         direction LR
         subgraph blank6[ ]
         direction LR
         subgraph blank9[ ]
             direction LR
             GPU1["`**OLLAMA1**
-            2 x RTX 3060 @ 12GB VRAM ea. 
+            1 x RTX 3060 @ 12GB VRAM ea. 
             2 x RTX 4060ti @ 16GB VRAM ea.
-            Total 56GB VRAM`"]
+            1 x RTX 3090 @ 24GB VRAM ea.
+            Total 68GB VRAM`"]
         end
         end
     end
@@ -73,11 +76,18 @@ graph LR
     subgraph LLMAPPSK8["`**Agentic-AI Services/Apps**`"]
         direction LR
         subgraph blank2[ ]
+        subgraph blank11[ ]
             direction LR
             RedditScraper["AI content analyser Service"]
             MedBillingForecast["Billing Forecasting Service"]
             VariousWorkflowAutomation["Domain Specific Workflow Automation Service"]
             FE["Front-end Apps"]
+            DataCachingService[General Purpose
+            Distributed Caching Service]
+            WebContentSummarizer[Web Content
+            Summarizer and Web Lookup
+            Service]
+        end
         end
     end
 
@@ -98,11 +108,14 @@ graph LR
     end
 
     %% Kubernetes Cluster
-    subgraph K8["`**Managed K8 Clusters**`"]
+    subgraph K8["`**K8 Clusters**`"]
+
+
         subgraph blank4 [ ]
         direction LR
         subgraph KS1["`**Kubesphere 4.1.2 - K8 Prod**`"]
             direction LR
+                subgraph blank12[ ]
                 subgraph blank[ ]
                 subgraph blank10[ ]
                     direction LR
@@ -111,12 +124,16 @@ graph LR
                     CACHING
                 end
                 end
+                end
             end
+
         end
+
         subgraph KS2["`**Kubesphere 4.1.2 - K8 Sandbox**`"
-        Mirror of K8 Prod]
-        direction LR
-        end
+            Mirror of K8 Prod]
+            direction LR
+            end
+
         K8CONFIG
         K8STORAGE
         KS1 --> K8STORAGE
@@ -135,7 +152,7 @@ graph LR
     end
 
     %% VMWare ESXi Host
-    subgraph ESXI["`**VMWare ESXi**`"]
+    subgraph ESXI["`**ProxMox 8**`"]
         subgraph blank3[ ]
             direction RL
             subgraph VMS["`**VMs**`"]
@@ -163,17 +180,30 @@ graph LR
     end
 
 %% Connections
-HAPROXY --> LLM
-RedditScraper --> HAPROXY
-MedBillingForecast --> HAPROXY
-VariousWorkflowAutomation --> HAPROXY
-ChatGPTUI --> HAPROXY
+LLM --Response--> HAPROXY
+HAPROXY --Prompt/Instruction--> LLM
+WebContentSummarizer --> HAPROXY
+RedditScraper --Instruction--> HAPROXY
+MedBillingForecast <--> HAPROXY
+VariousWorkflowAutomation <--> HAPROXY
+ChatGPTUI <---> HAPROXY
 CLIENT ==REST
 SSL/TLS==> LLMAPPSK8
 CLIENT ==HTTPS==> APPS
-DATASTORE ==Backup==> QNAP
+
 K8CONFIG ==Backup==> QNAP
 K8STORAGE ==> QNAP ==RSYNC==> BACKUP
+DataCachingService <==Unique Keys==> CACHING
+WebContentSummarizer <==> DataCachingService
+FE <==> DataCachingService
+RedditScraper <==> DataCachingService
+MedBillingForecast <==> DataCachingService
+VariousWorkflowAutomation <==> DataCachingService
+APPS <==Unique Keys==> CACHING
+DATASTORE ==Backup==> QNAP
+SUPERSET <==> DATASTORE
+LLMAPPSK8 <==> DATASTORE
+SONAR <==> DATASTORE
 
 class blank subgraph_padding
 class blank2 subgraph_padding
@@ -185,4 +215,8 @@ class blank7 subgraph_padding
 class blank8 subgraph_padding
 class blank9 subgraph_padding
 class blank10 subgraph_padding
+class blank11 subgraph_padding
+class blank12 subgraph_padding
+class blank13 subgraph_padding
+class blank14 subgraph_padding
 ```

@@ -12,6 +12,7 @@ flowchart TD
     style FA fill:#e6f9ff,stroke:#13821a,stroke-width:4px
     style B fill:#b3d9ff,stroke:#13821a,stroke-width:4px
     style QNAP fill:#ffb84d,stroke:#13821a,stroke-width:4px
+    style DATA fill:#ffb84d,stroke:#13821a,stroke-width:4px
     style C fill:#b3d9ff,stroke:#13821a,stroke-width:4px
     style D fill:#b3d9ff,stroke:#13821a,stroke-width:4px
     style E fill:#b3d9ff,stroke:#13821a,stroke-width:4px
@@ -26,12 +27,7 @@ flowchart TD
     style CAM4 fill:#e6fff2,stroke:#13821a,stroke-width:4px
     style Z fill:#ffdb4d,stroke:#13821a,stroke-width:4px
     style HB fill:#b3b3ff,stroke:#13821a,stroke-width:4px
-    style K8STORAGE fill:#aaaaaa,stroke:#13821a,stroke-width:4px
-    style K8CONFIG fill:#aaaaaa,stroke:#13821a,stroke-width:4px
-    style NFS fill:#ffb84d,stroke:#13821a,stroke-width:4px
-    style PSQL fill:#ffaa,stroke:#13821a,stroke-width:4px
-    style REDIS fill:#ffaa,stroke:#13821a,stroke-width:4px
-    style ELASTIC fill:#ffaa,stroke:#13821a,stroke-width:4px
+
 
 
     Z[WAN
@@ -58,7 +54,7 @@ flowchart TD
     AP]
 
     FC[POE Injector]
-    G[Lenovo ThinkCentre M93p
+    G["`**Lenovo ThinkCentre M93p**`"
     DNS + Unifi Controller + Pi-Hole]
     H[Ubiquiti
     Mini Flex]
@@ -68,7 +64,7 @@ flowchart TD
     HC[Laser Printer]
     QNAP[(QNAP TS-873
     NAS)]
-        HB[OLLAMA3
+    HB[OLLAMA
     M1 Max]
     PS5[Gaming
     Console]
@@ -82,26 +78,30 @@ flowchart TD
     CAM4[CAM4]
 
 
+
     BACKUP[External Backup]
-    K8CONFIG[K8 
-    YAML CONFIGS]
 
+    subgraph DATA[DATA]
+        direction LR
+        VM[VM
+        Datastore
+        and
+        Backup]
+        DB[Database 
+        Backups]
+        K8Storage[K8 
+        Datastore]
+        K8Config[K8
+        Configuration
+        Backup]
+    end
 
-    subgraph VMCLUSTER["ESXi 8U3
+    subgraph VMCLUSTER["ProxMox 8
         AMD Epyc 7532
         256GB RAM"]
     end
 
-    subgraph DATASTORE[Datastore]
-        PSQL[(PostgreSQL)]
-        REDIS[(Redis)]
-        ELASTIC[(ElasticCache)]
-    end
 
-
-    subgraph K8STORAGE[Kubernetes Datastore]
-        NFS[NFS Storageclass]
-    end
 
     Z <==10GBE==> A
     A <==10GBE
@@ -137,9 +137,14 @@ flowchart TD
     FA <==2.5GBE POE+==> B
     
 
-    K8STORAGE <-.NFS.-> QNAP
+   
     QNAP -.RSYNC.-> BACKUP
-    K8CONFIG -.CRON.-> QNAP
-    DATASTORE -.BACKUP.-> QNAP
+    DATA -.NFS
+    iSCSI
+    FakeS3.-> QNAP
+
+
+    class blank subgraph_padding
+    class blank1 subgraph_padding
 ```
 
